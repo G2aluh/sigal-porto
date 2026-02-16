@@ -1,6 +1,5 @@
 import { useState } from 'react';
 import { motion } from 'framer-motion';
-import { HiGlobeAlt } from 'react-icons/hi';
 import SectionWrapper from '../components/SectionWrapper';
 import ProjectModal from '../components/ProjectModal';
 import { projects } from '../data/content';
@@ -69,15 +68,6 @@ export default function Projects() {
                                 >
                                     <span className="font-pixel text-[9px]">PREVIEW FULL</span>
                                 </button>
-                                <a
-                                    href={project.liveUrl}
-                                    target="_blank"
-                                    rel="noopener noreferrer"
-                                    className="w-10 h-10 flex items-center justify-center border border-dark-600 text-gray-400 hover:text-yellow-400 hover:border-yellow-400/50 transition-colors"
-                                    aria-label={`Live demo for ${project.title}`}
-                                >
-                                    <HiGlobeAlt size={18} />
-                                </a>
                             </div>
                         </div>
                     </motion.div>

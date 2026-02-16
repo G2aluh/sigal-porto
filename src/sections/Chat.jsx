@@ -47,7 +47,7 @@ export default function Chat() {
 
     const suggestedQuestions = [
         'Who is Galuh?',
-        'What is PixelBoard?',
+        'What is Rima?',
         'What tech stack does he use?',
     ];
 
