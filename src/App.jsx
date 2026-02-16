@@ -1,4 +1,5 @@
 import CustomCursor from './components/CustomCursor'
+import BackgroundEffects from './components/BackgroundEffects'
 import Navbar from './components/Navbar'
 import Home from './sections/Home'
 import About from './sections/About'
@@ -11,6 +12,7 @@ function App() {
   return (
     <>
       <CustomCursor />
+      <BackgroundEffects />
       <Navbar />
       <main>
         <Home />

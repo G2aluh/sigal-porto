@@ -64,8 +64,17 @@ export default function Navbar() {
                                 <a
                                     key={link.href}
                                     href={link.href}
-                                    onClick={() => setIsOpen(false)}
-                                    className="text-gray-400 hover:text-yellow-400 transition-colors text-sm py-2"
+                                    onClick={(e) => {
+                                        e.preventDefault();
+                                        setIsOpen(false);
+                                        const element = document.querySelector(link.href);
+                                        if (element) {
+                                            element.scrollIntoView({ behavior: 'smooth' });
+                                            // Update URL hash manually without jumping
+                                            window.history.pushState(null, '', link.href);
+                                        }
+                                    }}
+                                    className="text-gray-400 hover:text-yellow-400 transition-colors text-sm py-2 block"
                                 >
                                     {link.label}
                                 </a>
