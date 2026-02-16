@@ -2,23 +2,14 @@ import { useState, useRef, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { HiPaperAirplane } from 'react-icons/hi';
 import SectionWrapper from '../components/SectionWrapper';
-import { chatResponses } from '../data/content';
-
-function getAIResponse(input) {
-    const lower = input.toLowerCase();
-    for (const r of chatResponses.responses) {
-        if (r.keywords.some((kw) => lower.includes(kw))) {
-            return r.answer;
-        }
-    }
-    return chatResponses.fallback;
-}
+import { getGeminiResponse } from '../services/gemini';
 
 export default function Chat() {
     const [messages, setMessages] = useState([
-        { role: 'ai', text: chatResponses.greeting },
+        { role: 'ai', text: "Hey there! 👾 I'm Rima. Ask me anything about Galuh, his projects, or tech stack!" },
     ]);
     const [input, setInput] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const scrollRef = useRef(null);
 
     useEffect(() => {
@@ -27,19 +18,24 @@ export default function Chat() {
         }
     }, [messages]);
 
-    const handleSend = () => {
+    const handleSend = async () => {
         const trimmed = input.trim();
-        if (!trimmed) return;
+        if (!trimmed || isLoading) return;
 
         const userMsg = { role: 'user', text: trimmed };
         setMessages((prev) => [...prev, userMsg]);
         setInput('');
+        setIsLoading(true);
 
-        // Simulate AI thinking delay
-        setTimeout(() => {
-            const aiMsg = { role: 'ai', text: getAIResponse(trimmed) };
+        try {
+            const responseText = await getGeminiResponse(trimmed);
+            const aiMsg = { role: 'ai', text: responseText };
             setMessages((prev) => [...prev, aiMsg]);
-        }, 600);
+        } catch (error) {
+            setMessages((prev) => [...prev, { role: 'ai', text: "Connection error... 🔌 Try again?" }]);
+        } finally {
+            setIsLoading(false);
+        }
     };
 
     const handleKeyDown = (e) => {
@@ -50,9 +46,9 @@ export default function Chat() {
     };
 
     const suggestedQuestions = [
-        'Who are you?',
-        'What tech do you use?',
-        'Show your best project',
+        'Who is Galuh?',
+        'What is PixelBoard?',
+        'What tech stack does he use?',
     ];
 
     return (
@@ -69,7 +65,7 @@ export default function Chat() {
             </div>
 
             <p className="text-gray-400 text-sm mb-6">
-                Chat with my AI persona to learn more about me. Ask anything about my skills, projects, or background!
+                Chat with Rima (my AI persona) to learn more about my work. She's powered by Google Gemini! 💎
             </p>
 
             {/* Chat container */}
@@ -78,7 +74,7 @@ export default function Chat() {
                 <div className="flex items-center gap-3 px-4 py-3 border-b border-dark-600 bg-dark-800">
                     <div className="w-2 h-2 bg-yellow-400 rounded-full" />
                     <span className="font-pixel text-[10px] text-gray-400">RIMA.AI</span>
-                    <span className="text-[10px] text-gray-600 ml-auto">powered by pixel magic ✨</span>
+                    <span className="text-[10px] text-gray-600 ml-auto">powered by Gemini ✨</span>
                 </div>
 
                 {/* Messages */}
@@ -100,10 +96,35 @@ export default function Chat() {
                                     : 'bg-dark-700 text-gray-300 border border-dark-600 mr-4'
                                     }`}
                             >
-                                {msg.text}
+                                {msg.text.split(/(https?:\/\/[^\s]+)/g).map((part, j) =>
+                                    part.match(/https?:\/\/[^\s]+/) ? (
+                                        <a
+                                            key={j}
+                                            href={part}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="text-yellow-400 underline hover:text-yellow-300 break-all"
+                                        >
+                                            {part}
+                                        </a>
+                                    ) : (
+                                        <span key={j}>{part.replace(/\*\*/g, '')}</span>
+                                    )
+                                )}
                             </div>
                         </motion.div>
                     ))}
+                    {isLoading && (
+                        <div className="flex justify-start">
+                            <div className="bg-dark-700 border border-dark-600 px-4 py-3 mr-4">
+                                <div className="flex gap-1">
+                                    <motion.div className="w-1.5 h-1.5 bg-gray-500 rounded-full" animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0 }} />
+                                    <motion.div className="w-1.5 h-1.5 bg-gray-500 rounded-full" animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.2 }} />
+                                    <motion.div className="w-1.5 h-1.5 bg-gray-500 rounded-full" animate={{ y: [0, -4, 0] }} transition={{ repeat: Infinity, duration: 0.6, delay: 0.4 }} />
+                                </div>
+                            </div>
+                        </div>
+                    )}
                 </div>
 
                 {/* Suggested questions */}
@@ -114,16 +135,18 @@ export default function Chat() {
                                 key={q}
                                 onClick={() => {
                                     setInput(q);
+                                    // Allow state to update then trigger send
                                     setTimeout(() => {
-                                        setMessages((prev) => [...prev, { role: 'user', text: q }]);
+                                        // Start process manually to ensure proper state flow
+                                        const userMsg = { role: 'user', text: q };
+                                        setMessages((prev) => [...prev, userMsg]);
                                         setInput('');
-                                        setTimeout(() => {
-                                            setMessages((prev) => [
-                                                ...prev,
-                                                { role: 'ai', text: getAIResponse(q) },
-                                            ]);
-                                        }, 600);
-                                    }, 100);
+                                        setIsLoading(true);
+                                        getGeminiResponse(q).then(res => {
+                                            setMessages(prev => [...prev, { role: 'ai', text: res }]);
+                                            setIsLoading(false);
+                                        });
+                                    }, 0);
                                 }}
                                 className="text-[11px] text-gray-400 border border-dark-600 px-3 py-1.5 hover:border-yellow-400/50 hover:text-yellow-400 transition-colors"
                             >
@@ -140,12 +163,13 @@ export default function Chat() {
                         value={input}
                         onChange={(e) => setInput(e.target.value)}
                         onKeyDown={handleKeyDown}
-                        placeholder="Ask me anything..."
-                        className="flex-1 bg-dark-700 border border-dark-600 text-white text-sm px-4 py-2.5 placeholder-gray-600 focus:outline-none focus:border-yellow-400/50 transition-colors"
+                        placeholder="Ask Rima anything..."
+                        disabled={isLoading}
+                        className="flex-1 bg-dark-700 border border-dark-600 text-white text-sm px-4 py-2.5 placeholder-gray-600 focus:outline-none focus:border-yellow-400/50 transition-colors disabled:opacity-50"
                     />
                     <button
                         onClick={handleSend}
-                        disabled={!input.trim()}
+                        disabled={!input.trim() || isLoading}
                         className="bg-yellow-400 text-dark-900 p-2.5 hover:bg-yellow-500 transition-colors disabled:opacity-40 disabled:hover:bg-yellow-400"
                         aria-label="Send message"
                     >
