@@ -66,15 +66,20 @@ export default function Navbar() {
                                     href={link.href}
                                     onClick={(e) => {
                                         e.preventDefault();
+                                        e.stopPropagation();
                                         setIsOpen(false);
-                                        const element = document.querySelector(link.href);
-                                        if (element) {
-                                            element.scrollIntoView({ behavior: 'smooth' });
-                                            // Update URL hash manually without jumping
-                                            window.history.pushState(null, '', link.href);
-                                        }
+                                        // Delay scroll until menu close animation finishes (300ms)
+                                        setTimeout(() => {
+                                            const element = document.querySelector(link.href);
+                                            if (element) {
+                                                const navHeight = 80;
+                                                const top = element.getBoundingClientRect().top + window.pageYOffset - navHeight;
+                                                window.scrollTo({ top, behavior: 'smooth' });
+                                                window.history.pushState(null, '', link.href);
+                                            }
+                                        }, 350);
                                     }}
-                                    className="text-gray-400 hover:text-yellow-400 transition-colors text-sm py-2 block"
+                                    className="text-gray-400 hover:text-yellow-400 transition-colors text-sm py-3 block"
                                 >
                                     {link.label}
                                 </a>
