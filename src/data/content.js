@@ -68,6 +68,15 @@ export const projects = [
         image: '/img/framer01.png',
         details: 'A sleek and interactive portfolio built entirely in Framer. Features smooth transitions, scroll effects, and a responsive layout that showcases design work without writing a single line of code.',
     },
+    {
+        id: 6,
+        title: 'Streakly',
+        description: 'A dedicated streak tracking app to build habits.',
+        techStack: ['React', 'Vite', 'Tailwind CSS', 'Supabase', 'Framer Motion'],
+        liveUrl: 'https://streakly-todolist.vercel.app/',
+        image: '/img/streakly.png',
+        details: 'Streakly helps you build consistent habits by tracking daily streaks. Features include custom goal setting, progress visualization, and motivational reminders to keep you on track.',
+    },
 ];
 // ── Chat Responses ──
 export const chatResponses = {
