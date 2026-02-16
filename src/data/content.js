@@ -7,7 +7,6 @@ export const skills = [
     { name: 'Node.js', category: 'coding' },
     { name: 'Next.js', category: 'coding' },
     { name: 'Tailwind CSS', category: 'coding' },
-    { name: 'Python', category: 'coding' },
     { name: 'Supabase', category: 'coding' },
     { name: 'Git', category: 'coding' },
     { name: 'REST APIs', category: 'coding' },
@@ -15,9 +14,7 @@ export const skills = [
     { name: 'Figma', category: 'design' },
     { name: 'UI/UX Design', category: 'design' },
     { name: 'Prototyping', category: 'design' },
-    { name: 'Responsive Design', category: 'design' },
-    { name: 'Design Systems', category: 'design' },
-    { name: 'Typography', category: 'design' },
+    { name: 'Poster Design', category: 'design' },
 ];
 
 // ── Projects Data ──
