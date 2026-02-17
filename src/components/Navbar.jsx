@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { HiMenu, HiX } from 'react-icons/hi';
+import { HiMenu, HiX, HiUser } from 'react-icons/hi';
+import ProfileModal from './ProfileModal';
 
 const navLinks = [
     { label: 'Home', href: '#home' },
@@ -14,6 +15,7 @@ const navLinks = [
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
     const [activeSection, setActiveSection] = useState('home');
+    const [isProfileOpen, setIsProfileOpen] = useState(false);
 
     useEffect(() => {
         const handleScroll = () => {
@@ -75,6 +77,8 @@ export default function Navbar() {
 
     return (
         <nav className="fixed top-0 left-0 w-full z-50 bg-dark-900/90 backdrop-blur-md border-b border-dark-700">
+            <ProfileModal isOpen={isProfileOpen} onClose={() => setIsProfileOpen(false)} />
+
             <div className="max-w-6xl mx-auto flex items-center justify-between px-4 sm:px-6 h-16">
                 {/* Logo */}
                 <a
@@ -86,47 +90,67 @@ export default function Navbar() {
                 </a>
 
                 {/* Desktop links */}
-                <div className="hidden md:flex items-center gap-1">
-                    {navLinks.map((link) => {
-                        const isActive = activeSection === link.href.substring(1);
-                        return (
-                            <a
-                                key={link.href}
-                                href={link.href}
-                                onClick={(e) => handleNavClick(e, link.href)}
-                                className={`
-                                    relative px-4 py-2 text-[10px] font-pixel tracking-widest transition-all duration-200
-                                    ${isActive ? 'text-dark-900 translate-y-1 translate-x-1' : 'text-gray-400 hover:text-yellow-400'}
-                                `}
-                            >
-                                {/* Active Background (Pixel Style + P5 Skew) */}
-                                {isActive && (
-                                    <motion.div
-                                        layoutId="activeSection"
-                                        className="absolute inset-0 bg-yellow-400 border-2 border-dark-900 -z-10 shadow-[2px_2px_0_0_#111827] -skew-x-12"
-                                        initial={{ opacity: 0, scale: 0.9 }}
-                                        animate={{ opacity: 1, scale: 1 }}
-                                        exit={{ opacity: 0, scale: 0.9 }}
-                                        transition={{ duration: 0.2 }}
-                                    />
-                                )}
+                <div className="hidden md:flex items-center gap-4">
+                    {/* Profile Button */}
+                    <button
+                        onClick={() => setIsProfileOpen(true)}
+                        className="bg-dark-800 hover:bg-yellow-400 text-yellow-400 hover:text-dark-900 p-2 border border-dark-600 hover:border-yellow-400 transition-all duration-300 group"
+                        aria-label="Profile"
+                    >
+                        <HiUser size={18} />
+                    </button>
 
-                                <span className="relative z-10">
-                                    {link.label}
-                                </span>
-                            </a>
-                        );
-                    })}
+                    <div className="flex items-center gap-1">
+                        {navLinks.map((link) => {
+                            const isActive = activeSection === link.href.substring(1);
+                            return (
+                                <a
+                                    key={link.href}
+                                    href={link.href}
+                                    onClick={(e) => handleNavClick(e, link.href)}
+                                    className={`
+                                        relative px-4 py-2 text-[10px] font-pixel tracking-widest transition-all duration-200
+                                        ${isActive ? 'text-dark-900 translate-y-1 translate-x-1' : 'text-gray-400 hover:text-yellow-400'}
+                                    `}
+                                >
+                                    {/* Active Background (Pixel Style + P5 Skew) */}
+                                    {isActive && (
+                                        <motion.div
+                                            layoutId="activeSection"
+                                            className="absolute inset-0 bg-yellow-400 border-2 border-dark-900 -z-10 shadow-[2px_2px_0_0_#111827] -skew-x-12"
+                                            initial={{ opacity: 0, scale: 0.9 }}
+                                            animate={{ opacity: 1, scale: 1 }}
+                                            exit={{ opacity: 0, scale: 0.9 }}
+                                            transition={{ duration: 0.2 }}
+                                        />
+                                    )}
+
+                                    <span className="relative z-10">
+                                        {link.label}
+                                    </span>
+                                </a>
+                            );
+                        })}
+                    </div>
                 </div>
 
                 {/* Mobile hamburger */}
-                <button
-                    onClick={() => setIsOpen(!isOpen)}
-                    className="md:hidden text-gray-400 hover:text-yellow-400 transition-colors p-2"
-                    aria-label="Toggle menu"
-                >
-                    {isOpen ? <HiX size={24} /> : <HiMenu size={24} />}
-                </button>
+                <div className="flex items-center gap-2 md:hidden">
+                    <button
+                        onClick={() => setIsProfileOpen(true)}
+                        className="bg-dark-800 hover:bg-yellow-400 text-yellow-400 hover:text-dark-900 p-2 border border-dark-600 hover:border-yellow-400 transition-all duration-300 group"
+                        aria-label="Profile"
+                    >
+                        <HiUser size={18} />
+                    </button>
+                    <button
+                        onClick={() => setIsOpen(!isOpen)}
+                        className="text-gray-400 hover:text-yellow-400 transition-colors p-2"
+                        aria-label="Toggle menu"
+                    >
+                        {isOpen ? <HiX size={24} /> : <HiMenu size={24} />}
+                    </button>
+                </div>
             </div>
 
             {/* Mobile drawer */}

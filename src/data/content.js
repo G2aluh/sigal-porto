@@ -118,3 +118,19 @@ export const socialLinks = {
     linkedin: 'https://www.linkedin.com/in/galuh-saputra-ba6a62340/',
     instagram: 'https://instagram.com/2.shinnra',
 };
+
+// ── Profile Data ──
+export const profile = {
+    title: "PLAYER PROFILE",
+    role: "Creative Developer",
+    dob: "Desember 12, 2007", // Placeholder
+    hobbies: ["Anime", "Hiking", "Gaming", "Coding", "Design"],
+    laptop: "ASUS Vivobook 14 A1404 - A1404ZA",
+    activeHours: "08:00 - 20:00",
+    stats: [
+        { label: "STR", value: 85, color: "bg-red-500" },
+        { label: "INT", value: 92, color: "bg-blue-500" },
+        { label: "DEX", value: 78, color: "bg-green-500" },
+        { label: "LUCK", value: 60, color: "bg-yellow-500" },
+    ]
+};
