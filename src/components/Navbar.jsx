@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { HiMenu, HiX } from 'react-icons/hi';
 
@@ -13,6 +13,65 @@ const navLinks = [
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = useState(false);
+    const [activeSection, setActiveSection] = useState('home');
+
+    useEffect(() => {
+        const handleScroll = () => {
+            const sections = navLinks.map(link => link.href.substring(1));
+            const scrollPosition = window.scrollY + 200; // Offset
+
+            for (const section of sections) {
+                const element = document.getElementById(section);
+                if (element) {
+                    const offsetTop = element.offsetTop;
+                    const offsetHeight = element.offsetHeight;
+
+                    if (scrollPosition >= offsetTop && scrollPosition < offsetTop + offsetHeight) {
+                        setActiveSection(section);
+                        break; // Found the current section
+                    }
+                }
+            }
+        };
+
+        window.addEventListener('scroll', handleScroll);
+        handleScroll(); // Initial check
+        return () => window.removeEventListener('scroll', handleScroll);
+    }, []);
+
+    const handleNavClick = (e, href, isMobile = false) => {
+        e.preventDefault();
+
+        if (isMobile) {
+            setIsOpen(false);
+        }
+
+        // Calculate target position with offset for fixed header
+        const targetElement = document.querySelector(href);
+        if (targetElement) {
+            const navHeight = 80; // Approximate height of navbar + padding
+            const elementPosition = targetElement.getBoundingClientRect().top + window.pageYOffset;
+            const offsetPosition = elementPosition - navHeight;
+
+            // Proper smooth scrolling logic
+            // Add delay for mobile to allow menu closing animation
+            if (isMobile) {
+                setTimeout(() => {
+                    window.scrollTo({
+                        top: offsetPosition,
+                        behavior: 'smooth'
+                    });
+                    window.history.pushState(null, '', href);
+                }, 350);
+            } else {
+                window.scrollTo({
+                    top: offsetPosition,
+                    behavior: 'smooth'
+                });
+                window.history.pushState(null, '', href);
+            }
+        }
+    };
 
     return (
         <nav className="fixed top-0 left-0 w-full z-50 bg-dark-900/90 backdrop-blur-md border-b border-dark-700">
@@ -20,23 +79,44 @@ export default function Navbar() {
                 {/* Logo */}
                 <a
                     href="#home"
+                    onClick={(e) => handleNavClick(e, '#home')}
                     className="font-pixel text-yellow-400 text-xs sm:text-sm tracking-wider hover:text-yellow-500 transition-colors"
                 >
                     sigal<span className="text-white">.jsx</span>
                 </a>
 
                 {/* Desktop links */}
-                <div className="hidden md:flex items-center gap-8">
-                    {navLinks.map((link) => (
-                        <a
-                            key={link.href}
-                            href={link.href}
-                            className="text-sm text-gray-400 hover:text-yellow-400 transition-colors relative group"
-                        >
-                            {link.label}
-                            <span className="absolute -bottom-1 left-0 w-0 h-0.5 bg-yellow-400 group-hover:w-full transition-all duration-300" />
-                        </a>
-                    ))}
+                <div className="hidden md:flex items-center gap-1">
+                    {navLinks.map((link) => {
+                        const isActive = activeSection === link.href.substring(1);
+                        return (
+                            <a
+                                key={link.href}
+                                href={link.href}
+                                onClick={(e) => handleNavClick(e, link.href)}
+                                className={`
+                                    relative px-4 py-2 text-[10px] font-pixel tracking-widest transition-all duration-200
+                                    ${isActive ? 'text-dark-900 translate-y-1 translate-x-1' : 'text-gray-400 hover:text-yellow-400'}
+                                `}
+                            >
+                                {/* Active Background (Pixel Style + P5 Skew) */}
+                                {isActive && (
+                                    <motion.div
+                                        layoutId="activeSection"
+                                        className="absolute inset-0 bg-yellow-400 border-2 border-dark-900 -z-10 shadow-[2px_2px_0_0_#111827] -skew-x-12"
+                                        initial={{ opacity: 0, scale: 0.9 }}
+                                        animate={{ opacity: 1, scale: 1 }}
+                                        exit={{ opacity: 0, scale: 0.9 }}
+                                        transition={{ duration: 0.2 }}
+                                    />
+                                )}
+
+                                <span className="relative z-10">
+                                    {link.label}
+                                </span>
+                            </a>
+                        );
+                    })}
                 </div>
 
                 {/* Mobile hamburger */}
@@ -59,31 +139,23 @@ export default function Navbar() {
                         transition={{ duration: 0.3 }}
                         className="md:hidden overflow-hidden bg-dark-800 border-b border-dark-700"
                     >
-                        <div className="flex flex-col py-4 px-6 gap-4">
-                            {navLinks.map((link) => (
-                                <a
-                                    key={link.href}
-                                    href={link.href}
-                                    onClick={(e) => {
-                                        e.preventDefault();
-                                        e.stopPropagation();
-                                        setIsOpen(false);
-                                        // Delay scroll until menu close animation finishes (300ms)
-                                        setTimeout(() => {
-                                            const element = document.querySelector(link.href);
-                                            if (element) {
-                                                const navHeight = 80;
-                                                const top = element.getBoundingClientRect().top + window.pageYOffset - navHeight;
-                                                window.scrollTo({ top, behavior: 'smooth' });
-                                                window.history.pushState(null, '', link.href);
-                                            }
-                                        }, 350);
-                                    }}
-                                    className="text-gray-400 hover:text-yellow-400 transition-colors text-sm py-3 block"
-                                >
-                                    {link.label}
-                                </a>
-                            ))}
+                        <div className="flex flex-col py-4 px-6 gap-2">
+                            {navLinks.map((link) => {
+                                const isActive = activeSection === link.href.substring(1);
+                                return (
+                                    <a
+                                        key={link.href}
+                                        href={link.href}
+                                        onClick={(e) => handleNavClick(e, link.href, true)}
+                                        className={`
+                                            relative block px-4 py-3 text-[10px] font-pixel tracking-widest transition-all
+                                            ${isActive ? 'text-dark-900 bg-yellow-400 border-2 border-dark-900 shadow-[4px_4px_0_0_#111827] -skew-x-6 origin-left' : 'text-gray-400 hover:text-yellow-400'}
+                                        `}
+                                    >
+                                        {link.label}
+                                    </a>
+                                );
+                            })}
                         </div>
                     </motion.div>
                 )}

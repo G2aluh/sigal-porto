@@ -1,6 +1,17 @@
-import { motion } from 'framer-motion';
+import { useState, useEffect } from 'react';
+import { motion, AnimatePresence } from 'framer-motion';
 
 export default function Home() {
+    const [index, setIndex] = useState(0);
+    const words = ["WEBSITE", "DESIGN", "POSTER"];
+
+    useEffect(() => {
+        const interval = setInterval(() => {
+            setIndex((prev) => (prev + 1) % words.length);
+        }, 2500);
+        return () => clearInterval(interval);
+    }, []);
+
     return (
         <section
             id="home"
@@ -71,7 +82,20 @@ export default function Home() {
                     transition={{ duration: 0.6, delay: 0.6 }}
                 >
                     I BUILD{' '}
-                    <span className="text-yellow-400">DIGITAL</span>
+                    <div className="inline-flex items-center justify-center relative h-[2em] w-[8.5em] align-middle -translate-y-2 -mx-2 overflow-hidden bg-gray-900/60 border-2 border-gray-700 rounded-none shadow-[4px_4px_0_0_rgb(55,65,81)]">
+                        <AnimatePresence mode='wait'>
+                            <motion.span
+                                key={words[index]}
+                                className="absolute inset-0 flex items-center justify-center text-yellow-400 font-pixel tracking-widest pl-2 pt-1"
+                                initial={{ y: "100%" }}
+                                animate={{ y: 0 }}
+                                exit={{ y: "-100%" }}
+                                transition={{ duration: 0.5, ease: "backOut" }}
+                            >
+                                {words[index]}
+                            </motion.span>
+                        </AnimatePresence>
+                    </div>
                     <br />
                     EXPERIENCES
                 </motion.h1>
