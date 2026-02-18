@@ -120,7 +120,7 @@ export default function Home() {
                 >
                     <a
                         href="#projects"
-                        className="inline-flex items-center justify-center gap-2 bg-yellow-400 text-dark-900 font-bold px-8 py-3.5 text-sm hover:bg-yellow-500 transition-colors pixel-border-sm"
+                        className="inline-flex items-center justify-center gap-2 bg-yellow-400 text-dark-900 font-bold px-8 py-3.5 text-sm hover:bg-yellow-500 transition-colors"
                     >
                         <span className="font-pixel text-[10px]">VIEW PROJECTS</span>
                     </a>
