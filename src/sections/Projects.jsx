@@ -66,7 +66,7 @@ export default function Projects() {
                                     onClick={() => setSelectedProject(project)}
                                     className="flex-1 bg-yellow-400 text-dark-900 py-2.5 text-center font-bold hover:bg-yellow-500 transition-colors"
                                 >
-                                    <span className="font-pixel text-[9px]">PREVIEW FULL</span>
+                                    <span className="font-pixel text-[9px]">ACTIVATE GAME MODE</span>
                                 </button>
                             </div>
                         </div>
