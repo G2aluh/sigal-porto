@@ -24,34 +24,34 @@ export default function ProjectModal({ project, onClose }) {
 
                 {/* Modal Content */}
                 <motion.div
-                    className="relative w-full max-w-3xl bg-dark-800 border border-dark-600 shadow-2xl overflow-hidden flex flex-col max-h-[90vh]"
+                    className="relative w-full max-w-3xl pixel-card overflow-hidden flex flex-col max-h-[90vh]"
                     initial={{ scale: 0.95, opacity: 0, y: 20 }}
                     animate={{ scale: 1, opacity: 1, y: 0 }}
                     exit={{ scale: 0.95, opacity: 0, y: 20 }}
                     transition={{ type: "spring", duration: 0.5, bounce: 0.3 }}
                 >
-                    {/* Header */}
-                    <div className="flex items-center justify-between p-4 border-b border-dark-600 bg-dark-800 shrink-0 z-10">
-                        <h3 className="font-pixel text-lg sm:text-xl text-yellow-400 truncate pr-4">
+                    {/* Header - Retro Title Bar */}
+                    <div className="flex items-center justify-between p-3 border-b-4 border-dark-900 bg-yellow-400 shrink-0 z-10">
+                        <h3 className="font-pixel text-xs sm:text-sm text-dark-900 truncate pr-4">
                             {project.title}
                         </h3>
                         <button
                             onClick={onClose}
-                            className="text-gray-400 hover:text-white transition-colors p-2 hover:bg-dark-700/50 rounded"
+                            className="text-dark-900 hover:text-white hover:bg-dark-900 transition-colors p-1"
                         >
-                            <HiX size={24} />
+                            <HiX size={20} />
                         </button>
                     </div>
 
                     {/* Scrollable Content */}
-                    <div className="overflow-y-auto p-0">
+                    <div className="overflow-y-auto p-0 bg-dark-800">
                         {/* Full Image */}
                         {project.image && (
-                            <div className="w-full bg-dark-900 border-b border-dark-600">
+                            <div className="w-full bg-dark-900 border-b-4 border-dark-900 p-2">
                                 <img
                                     src={project.image}
                                     alt={project.title}
-                                    className="w-full h-auto object-contain max-h-[500px] mx-auto"
+                                    className="w-full h-auto object-contain max-h-[500px] mx-auto pixel-border-sm"
                                 />
                             </div>
                         )}
@@ -59,20 +59,27 @@ export default function ProjectModal({ project, onClose }) {
                         {/* Details Body */}
                         <div className="p-6 space-y-6">
                             <div className="space-y-4">
-                                <h4 className="font-pixel text-xs text-yellow-400 tracking-wider">ABOUT THE PROJECT</h4>
-                                <p className="text-gray-300 leading-relaxed text-sm sm:text-base">
+                                <h4 className="font-pixel text-xs text-yellow-400 tracking-wider border-b-2 border-dark-600 pb-2 inline-block">
+                                    ABOUT THE PROJECT
+                                </h4>
+                                <p className="text-gray-300 leading-relaxed text-sm sm:text-base font-mono">
                                     {project.details}
                                 </p>
                             </div>
 
                             {/* Tech Stack */}
                             <div>
-                                <h4 className="font-pixel text-xs text-yellow-400 tracking-wider mb-3">TECH STACK</h4>
+                                <h4 className="font-pixel text-xs text-yellow-400 tracking-wider mb-4 border-b-2 border-dark-600 pb-2 inline-block">
+                                    TECH STACK
+                                </h4>
                                 <div className="flex flex-wrap gap-2">
                                     {project.techStack.map((tech) => (
                                         <span
                                             key={tech}
-                                            className="text-xs font-mono bg-dark-700 text-yellow-400/80 px-3 py-1.5 border border-dark-600 rounded-sm"
+                                            className="text-xs font-pixel text-dark-900 bg-gray-400 px-2 py-1"
+                                            style={{
+                                                boxShadow: '2px 2px 0px 0px #000'
+                                            }}
                                         >
                                             {tech}
                                         </span>
@@ -83,16 +90,16 @@ export default function ProjectModal({ project, onClose }) {
                     </div>
 
                     {/* Footer Actions */}
-                    <div className="p-4 border-t border-dark-600 bg-dark-800 shrink-0 flex gap-3 justify-end items-center">
+                    <div className="p-4 border-t-4 border-dark-900 bg-dark-700 shrink-0 flex flex-wrap gap-3 justify-end items-center">
                         {project.image && (
                             <a
                                 href={project.image}
                                 download
-                                className="mr-auto text-gray-400 hover:text-yellow-400 transition-colors flex items-center gap-2 text-xs font-pixel group"
+                                className="mr-auto text-gray-400 hover:text-yellow-400 transition-colors flex items-center gap-2 text-xs font-pixel group pixel-btn pixel-btn-dark"
                                 title="Download Image"
                             >
-                                <HiDownload size={16} className="group-hover:animate-bounce" />
-                                <span className="hidden sm:inline">DOWNLOAD IMG</span>
+                                <HiDownload size={16} />
+                                <span className="hidden sm:inline">SAVE IMAGE</span>
                             </a>
                         )}
 
@@ -101,14 +108,14 @@ export default function ProjectModal({ project, onClose }) {
                                 href={project.liveUrl}
                                 target="_blank"
                                 rel="noopener noreferrer"
-                                className="bg-yellow-400 text-dark-900 px-6 py-2 font-pixel text-xs hover:bg-yellow-500 transition-colors flex items-center"
+                                className="pixel-btn pixel-btn-yellow text-dark-900"
                             >
                                 LIVE DEMO
                             </a>
                         )}
                         <button
                             onClick={onClose}
-                            className="border border-dark-600 text-gray-300 px-6 py-2 font-pixel text-xs hover:bg-dark-700 transition-colors"
+                            className="pixel-btn pixel-btn-dark"
                         >
                             CLOSE
                         </button>

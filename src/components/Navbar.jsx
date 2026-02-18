@@ -109,19 +109,22 @@ export default function Navbar() {
                                     href={link.href}
                                     onClick={(e) => handleNavClick(e, link.href)}
                                     className={`
-                                        relative px-4 py-2 text-[10px] font-pixel tracking-widest transition-all duration-200
+                                        relative px-4 py-2 text-[10px] font-pixel tracking-widest transition-all duration-100
                                         ${isActive ? 'text-dark-900 translate-y-1 translate-x-1' : 'text-gray-400 hover:text-yellow-400'}
                                     `}
                                 >
-                                    {/* Active Background (Pixel Style + P5 Skew) */}
+                                    {/* Active Background (Pixel Style) */}
                                     {isActive && (
                                         <motion.div
                                             layoutId="activeSection"
-                                            className="absolute inset-0 bg-yellow-400 border-2 border-dark-900 -z-10 shadow-[2px_2px_0_0_#111827] -skew-x-12"
-                                            initial={{ opacity: 0, scale: 0.9 }}
-                                            animate={{ opacity: 1, scale: 1 }}
-                                            exit={{ opacity: 0, scale: 0.9 }}
-                                            transition={{ duration: 0.2 }}
+                                            className="absolute inset-0 border-2 border-white  bg-yellow-400 -z-10"
+                                            style={{
+                                                boxShadow: '2px 2px 0 0 #000, -2px -2px 0 0 #fff'
+                                            }}
+                                            initial={{ opacity: 0 }}
+                                            animate={{ opacity: 1 }}
+                                            exit={{ opacity: 0 }}
+                                            transition={{ duration: 0.1 }}
                                         />
                                     )}
 
@@ -161,9 +164,9 @@ export default function Navbar() {
                         animate={{ height: 'auto', opacity: 1 }}
                         exit={{ height: 0, opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="md:hidden overflow-hidden bg-dark-800 border-b border-dark-700"
+                        className="md:hidden overflow-hidden bg-dark-800 border-b-4 border-dark-600"
                     >
-                        <div className="flex flex-col py-4 px-6 gap-2">
+                        <div className="flex flex-col py-4 px-6 gap-3">
                             {navLinks.map((link) => {
                                 const isActive = activeSection === link.href.substring(1);
                                 return (
@@ -173,7 +176,9 @@ export default function Navbar() {
                                         onClick={(e) => handleNavClick(e, link.href, true)}
                                         className={`
                                             relative block px-4 py-3 text-[10px] font-pixel tracking-widest transition-all
-                                            ${isActive ? 'text-dark-900 bg-yellow-400 border-2 border-dark-900 shadow-[4px_4px_0_0_#111827] -skew-x-6 origin-left' : 'text-gray-400 hover:text-yellow-400'}
+                                            ${isActive
+                                                ? 'text-dark-900 bg-yellow-400 pixel-btn-yellow shadow-[4px_4px_0_0_#000]'
+                                                : 'text-gray-400 hover:text-yellow-400 border border-transparent hover:border-yellow-400 border-dashed'}
                                         `}
                                     >
                                         {link.label}

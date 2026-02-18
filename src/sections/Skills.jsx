@@ -32,18 +32,23 @@ export default function Skills() {
                         key={tab}
                         onClick={() => setActiveTab(tab)}
                         className={`relative px-5 py-2.5 text-sm font-medium transition-colors ${activeTab === tab
-                            ? 'text-dark-900'
-                            : 'text-gray-400 hover:text-yellow-400'
+                                ? 'text-dark-900'
+                                : 'text-gray-400 hover:text-white'
                             }`}
                     >
-                        {activeTab === tab && (
+                        {activeTab === tab ? (
                             <motion.div
                                 layoutId="skillTabBg"
-                                className="absolute inset-0 bg-yellow-400"
-                                transition={{ type: 'spring', stiffness: 400, damping: 30 }}
+                                className="absolute inset-0 bg-yellow-400 -z-10"
+                                style={{
+                                    boxShadow: '4px 4px 0 0 #000, -2px -2px 0 0 #333'
+                                }}
+                                transition={{ type: 'spring', stiffness: 300, damping: 25 }}
                             />
+                        ) : (
+                            <div className="absolute inset-0 border-2 border-transparent hover:border-yellow-400/50 hover:bg-dark-800 -z-10 transition-colors border-dashed" />
                         )}
-                        <span className="relative z-10 font-pixel text-[10px]">{tab.toUpperCase()}</span>
+                        <span className="relative z-10 font-pixel text-[10px] tracking-widest">{tab.toUpperCase()}</span>
                     </button>
                 ))}
             </div>
